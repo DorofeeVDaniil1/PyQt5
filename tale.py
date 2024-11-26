@@ -1,32 +1,19 @@
 import sqlite3
 
-def create_database():
-    # Подключение или создание файла базы данных
+def alter_database():
+    # Подключение к базе данных
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
 
-    # Создание таблицы records
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS records (
-        id INTEGER PRIMARY KEY AUTOINCREMENT, 
-        title TEXT NOT NULL
-    )
-    """)
-
-    # Добавление тестовых данных
-    cursor.executemany("""
-    INSERT INTO records (title) VALUES (?)
-    """, [
-        ("Первая запись",),
-        ("Вторая запись",),
-        ("Третья запись",)
-    ])
+    # Добавление новых столбцов в таблицу records
+    cursor.execute("ALTER TABLE records ADD COLUMN user_id TEXT NOT NULL DEFAULT 'default_user'")
+    cursor.execute("ALTER TABLE records ADD COLUMN body TEXT NOT NULL DEFAULT 'default_body'")
 
     # Сохранение изменений и закрытие подключения
     conn.commit()
     conn.close()
 
-    print("База данных успешно создана и заполнена тестовыми данными!")
+    print("Таблица успешно обновлена!")
 
 if __name__ == "__main__":
-    create_database()
+    alter_database()
